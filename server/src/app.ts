@@ -45,7 +45,7 @@ export function createApp() {
 
   const clientDist =
     process.env.CLIENT_DIST_PATH ||
-    (isProduction && !process.env.VERCEL
+    (isProduction || process.env.VERCEL
       ? path.join(__dirname, '../../client/dist')
       : null);
 
@@ -54,6 +54,11 @@ export function createApp() {
     app.get(/^(?!\/api|\/uploads).*/, (_req, res) => {
       res.sendFile(path.join(clientDist, 'index.html'));
     });
+    if (process.env.VERCEL) {
+      console.log(`Vercel: servindo frontend de ${clientDist}`);
+    }
+  } else if (process.env.VERCEL) {
+    console.warn('Vercel: pasta client/dist não encontrada em', clientDist);
   }
 
   app.use(

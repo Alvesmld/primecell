@@ -2,17 +2,15 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run build:vercel",
   "installCommand": "npm run install:all && cd api && npm install",
-  "outputDirectory": "client/dist",
   "framework": null,
   "functions": {
-    "api/[[...path]].ts": {
+    "api/index.ts": {
       "memory": 1024,
       "maxDuration": 30,
-      "includeFiles": "server/dist/**"
+      "includeFiles": ["server/dist/**", "client/dist/**"]
     }
   },
   "rewrites": [
-    { "source": "/uploads/:path*", "destination": "/api/uploads/:path*" },
-    { "source": "/((?!api/|uploads/|assets/).*)", "destination": "/index.html" }
+    { "source": "/(.*)", "destination": "/api" }
   ]
 }
