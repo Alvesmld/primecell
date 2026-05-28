@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import serverless from 'serverless-http';
-import { createApp } from '../server/dist/app.js';
+import serverless from 'serverless-http'
+import { createApp } from '../server/src/app';
 
 const app = createApp();
 const handler = serverless(app);
@@ -13,7 +13,9 @@ function restoreOriginalUrl(req: VercelRequest) {
 
   if (raw) {
     try {
-      const pathname = raw.startsWith('http') ? new URL(raw).pathname : raw.split('?')[0];
+      const pathname = raw.startsWith('http')
+        ? new URL(raw).pathname
+        : raw.split('?')[0];
       if (pathname && pathname !== '/api') {
         (req as VercelRequest & { url: string }).url = pathname;
       }
@@ -40,4 +42,5 @@ export const config = {
     bodyParser: false,
   },
   maxDuration: 30,
+  includeFiles: 'dist/**'
 };
