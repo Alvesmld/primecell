@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import serverless from 'serverless-http'
+import serverless from 'serverless-http';
 import { createApp } from '../server/src/app';
 
 const app = createApp();
@@ -25,7 +25,7 @@ function restoreOriginalUrl(req: VercelRequest) {
   }
 }
 
-export default async function (req: VercelRequest, res: VercelResponse) {
+export default async function handler_fn(req: VercelRequest, res: VercelResponse) {
   try {
     restoreOriginalUrl(req);
     return await handler(req, res);
@@ -36,11 +36,3 @@ export default async function (req: VercelRequest, res: VercelResponse) {
     });
   }
 }
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-  maxDuration: 30,
-  includeFiles: 'dist/**'
-};
