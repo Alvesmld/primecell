@@ -32,9 +32,21 @@ Substitua `SEU_USUARIO` pelo seu usuário do GitHub.
 | Nome | Valor |
 |------|--------|
 | `NODE_ENV` | `production` |
-| `JWT_SECRET` | *(gere uma chave longa, ex. 64 caracteres aleatórios)* |
+| `JWT_SECRET` | *(obrigatório — gere uma chave longa, ex. 64 caracteres aleatórios)* |
+
+> Sem `JWT_SECRET`, o login pode falhar com "Erro na requisição".
 
 6. Clique **Deploy**
+
+### Atualizar após correções
+
+```bash
+git add .
+git commit -m "fix: API Vercel login"
+git push
+```
+
+A Vercel faz redeploy automático em alguns segundos.
 
 ## 3. Após o deploy
 

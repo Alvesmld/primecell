@@ -25,7 +25,14 @@ export async function api<T>(
     (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
   }
 
-  const res = await fetch(`/api${endpoint}`, { ...options, headers });
+  let res: Response;
+  try {
+    res = await fetch(`/api${endpoint}`, { ...options, headers });
+  } catch {
+    throw new Error(
+      'Não foi possível conectar ao servidor. Verifique sua internet ou se a API está no ar.'
+    );
+  }
 
   if (res.status === 401) {
     clearToken();
@@ -33,9 +40,17 @@ export async function api<T>(
     throw new Error('Não autorizado');
   }
 
-  const data = await res.json().catch(() => ({}));
+  const contentType = res.headers.get('content-type') || '';
+  const isJson = contentType.includes('application/json');
+  const data = isJson ? await res.json().catch(() => ({})) : {};
+
   if (!res.ok) {
-    throw new Error(data.error || 'Erro na requisição');
+    if (!isJson) {
+      throw new Error(
+        `Servidor retornou erro ${res.status}. A API pode estar indisponível — faça um novo deploy na Vercel.`
+      );
+    }
+    throw new Error((data as { error?: string }).error || 'Erro na requisição');
   }
   return data as T;
 }

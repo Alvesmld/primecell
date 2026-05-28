@@ -19,7 +19,7 @@ export function createApp() {
   const app = express();
   const isProduction = process.env.NODE_ENV === 'production';
 
-  if (!isProduction) {
+  if (process.env.VERCEL || !isProduction) {
     app.use(cors());
   } else if (process.env.CORS_ORIGIN) {
     app.use(cors({ origin: process.env.CORS_ORIGIN }));
