@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import serverless from 'serverless-http';
-import { createApp } from '../server/src/app';
+import { createApp } from '../server/dist/app.js';
 
 const app = createApp();
 const handler = serverless(app);
@@ -25,7 +25,7 @@ function restoreOriginalUrl(req: VercelRequest) {
   }
 }
 
-export default async function handler_fn(req: VercelRequest, res: VercelResponse) {
+export default async function handlerFn(req: VercelRequest, res: VercelResponse) {
   try {
     restoreOriginalUrl(req);
     return await handler(req, res);
